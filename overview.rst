@@ -23,7 +23,7 @@ sys 模块与 Python 解析器相关:
 
  .. warning:: 对 sys.path 的修改维持到 Python 解析器退出
 
- 访问 sys.path 可以使用 sys.getcwd() 函数。
+ 访问 sys.path 可以使用 os.getcwd() 函数。
 
 2. sys.modules
    
@@ -93,7 +93,7 @@ os.system() 只是简单地运行命令行；os.popen() 连接命令的标准输
 subprocess
 ----------
 
-对于脚本 ``hello.py``:
+对于脚本 ``D:\hello.py``:
 
 .. code-block:: Python
 
@@ -102,16 +102,20 @@ subprocess
    ''' Python 2.7.x '''
    print 'hello,world'
 
-使用 subprocess 模块执行 Python 脚本时，和 os.system() 用法一致：``subprocess.call("python 1.py")``；
-使用 subprocess 模块执行 命令行内部指令时（比如 cmd 中的 type)，则不能用这种方式，而应该采用如下方式：
+使用 subprocess 模块执行该脚本：
 
 .. code-block:: Python
 
- subprocess.call('cmd /C "type 1.py"')
+ subprocess.call(r'cmd /C "D:\1.py"') #表示另外打开一个命令行窗口执行脚本，脚本结果通过该函数返回
 
 .. code-block:: Python
 
- subprocess.call("type 1.py", shell=True)
+ subprocess.call(r"D:\1.py", shell=True) #如果 1.py处在当前目录，则可以省略 shell 参数
+
+对于具有命令行特性的指令，shell 参数必须设为True，其余的情况下可以省略不写( shell = False )：
+
+* 命令行内部命令（比如 Windows 命令行指令 type）
+* 需要搜索路径的程序，例如上面的例子
 
 程序使用方式
 ------------
