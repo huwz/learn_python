@@ -4,6 +4,7 @@
 .. note::
  学习 Python 不要将时间浪费在记 API 的功能上，而应该学习 Python 的编程理念。
  
+ 对于重要模块 os, sys，应该尽量熟悉模块里的方法和属性
  对于常用的 API，应该熟悉使用方法；记不住也没关系，重要的是要学会使用 ``Python Manuals``。
 
 os 和 sys 模块
@@ -41,6 +42,10 @@ sys 模块与 Python 解析器相关:
  * sys.stdin
  * sys.stdout
  * sys.stderr
+   
+5. sys.argv
+   
+   获取命令行参数
 
 os 模块与 Python 解析器运行的操作系统有关：
 
@@ -90,33 +95,6 @@ os.system() 只是简单地运行命令行；os.popen() 连接命令的标准输
  os.popen('type 1.txt').read()
  os.popen('type 2.txt').readlines()
 
-subprocess
-----------
-
-对于脚本 ``D:\hello.py``:
-
-.. code-block:: Python
-
-   #-*- coding -*-
-
-   ''' Python 2.7.x '''
-   print 'hello,world'
-
-使用 subprocess 模块执行该脚本：
-
-.. code-block:: Python
-
- subprocess.call(r'cmd /C "D:\1.py"') #表示另外打开一个命令行窗口执行脚本，脚本结果通过该函数返回
-
-.. code-block:: Python
-
- subprocess.call(r"D:\1.py", shell=True) #如果 1.py处在当前目录，则可以省略 shell 参数
-
-对于具有命令行特性的指令，shell 参数必须设为True，其余的情况下可以省略不写( shell = False )：
-
-* 命令行内部命令（比如 Windows 命令行指令 type）
-* 需要搜索路径的程序，例如上面的例子
-
 程序使用方式
 ------------
 
@@ -133,4 +111,4 @@ subprocess
 | dir  | 列举类的所有属性和成员 |
 +------+------------------------+
 
-
+(over)
