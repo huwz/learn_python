@@ -68,7 +68,7 @@ Python 不是运行在真空中。
 .. code-block:: Python
  :linenos:
 
- sys.stdout.write('hello,world\n') # <=>  print('hello,world')
+ sys.stdout.write('hello,world\n') # print('hello,world')
  sys.stdin.readline() # in = input()
                       # print in 
 
@@ -131,6 +131,20 @@ Python 有一个很有意思的思想::
  class Input(object):
      def read(self):
          return 'hello, world\n'
+ class Output(object):
+     def write(self, s):
+         f = open('1.txt', 'w')
+         f.write(s)
+         f.close()
  
  sys.stdin = Input()
  sys.stdin.read() # 'hello, world'
+ sys.stderr = Input()
+ sys.stderr.read() # 'hello, world'
+ sys.stdout = Output()
+ sys.stdout.write('hello, world\n') #生成文件 1.txt，输入文本 'hello, world\n'
+
+``print()`` 的重定向
+--------------------
+
+
