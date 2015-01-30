@@ -4,7 +4,7 @@
 .. note::
  学习 Python 不要将时间浪费在记 API 的功能上，而应该学习 Python 的编程理念。
  
- 对于重要模块 os, sys，应该尽量熟悉模块里的方法和属性
+ 对于重要模块 os, sys，应该尽量熟悉模块里的方法和属性；
  对于常用的 API，应该熟悉使用方法；记不住也没关系，重要的是要学会使用 ``Python Manuals``。
 
 os 和 sys 模块
@@ -12,26 +12,26 @@ os 和 sys 模块
 
 sys 模块与 Python 解析器相关:
 
-1. sys.path
+1. ``sys.path``
    
  列举了 Python 解析器真正的搜索路径。
- 当模块被载入时，Python 从左到右依次获取 sys.path 中的目录。
+ 当模块被载入时，Python 从左到右依次获取 ``sys.path`` 中的目录。
  每获取一个目录，就遍历目录中的文件，直至找到和模块名相同的文件名为止。
 
- sys.path 在 Python 解析器运行的时候初始化。
- Python 加载环境变量 PYHTONPATH 的值，作为 sys.path 的初始值。
- 当然 sys.path 的值不都是来自于 PYHTONPATH，它的值是可以修改的。
+ ``sys.path`` 在 Python 解析器运行的时候初始化。
+ Python 加载环境变量 ``PYTHONPATH`` 的值，作为 sys.path 的初始值。
+ 当然 ``sys.path`` 的值不都是来自于 ``PYTHONPATH``，它的值是可以修改的。
 
- .. warning:: 对 sys.path 的修改维持到 Python 解析器退出
+ .. warning:: 对 ``sys.path`` 的修改维持到 Python 解析器退出
 
- 访问 sys.path 可以使用 os.getcwd() 函数。
+ 访问 ``sys.path`` 可以使用 ``os.getcwd()`` 函数。
 
-2. sys.modules
+2. ``sys.modules``
    
  列举已经加载的模块。
  这是一个字典结构
 
-3. sys.exec_info()
+3. ``sys.exec_info()``
    
  发生异常时，可以通过这个接口获取异常类型，值以及回溯对象。
 
@@ -39,11 +39,11 @@ sys 模块与 Python 解析器相关:
 
  标准流包括：
  
- * sys.stdin
- * sys.stdout
- * sys.stderr
+ * ``sys.stdin``
+ * ``sys.stdout``
+ * ``sys.stderr``
    
-5. sys.argv
+5. ``sys.argv``
    
    获取命令行参数
 
@@ -85,7 +85,7 @@ os 模块提供了工具，可以在 Python 脚本中执行命令行。
 与命令行的“通信”
 ----------------
 
-os.system() 只是简单地运行命令行；os.popen() 连接命令的标准输入或者输出流。
+``os.system()`` 只是简单地运行命令行；``os.popen()`` 连接命令的标准输入或者输出流。
 默认情况下，获取一个类文件对象，连接命令行的输出（如果用 ``'w'``  标志，则是命令行的输入）。
 通过该对象，可以读取命令行产生的输出。
 
