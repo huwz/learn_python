@@ -8,9 +8,9 @@ URL访问的扩展库—— ``urllib2``
 
 * ``urllib2.urlopen(url, [,data][,timeout])``
 
-  打开一个 URL，参数 url 是一个字符串，或者一个 ``Request`` 对象。
+  * ``url`` 字符串 / ``Request`` 对象
 
-  .. warning:: HTTPS 请求不做服务器认证确认
+    .. warning:: HTTPS 请求不做服务器认证确认
 
   * ``data`` 字符串/ ``None``
   
@@ -56,7 +56,7 @@ URL访问的扩展库—— ``urllib2``
   .. attention:: URL 访问者对象包含请求处理器(``Handler``)。
    只有用 ``urlopen()`` 打开 URL，才需要定义一个访问者。
 
-  一般情况下，可以用 ``OpenerDirector.open()`` 代替 ``urlopen()``。
+  一般情况下，可以用 ``<OpenerDirector instance>.open()`` 代替 ``urlopen()``。
   好处是不用显示地指定 URL 访问者。
 
 * ``urllib2.build_opener([handler,...])``
@@ -90,7 +90,7 @@ URL访问的扩展库—— ``urllib2``
     ``data`` 必须符合 ``application/x-www-form-urlencoded`` 格式规范。
     可以调用函数 ``urllib.urlencode()`` 做数据格式转换；
     该函数的输入参数为字典或者二元组，返回的是 ``application/x-www-form-urlencoded`` 格式的字符串。
-    urllib2 模块支持 HTTP/1.1 版本的请求，请求头中带有 **Connection:close** 字段。
+    urllib2 模块支持 HTTP/1.1 版本的请求，请求头中带有 ``Connection:close`` 字段。
 
   * headers 是一个字典
  
