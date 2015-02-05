@@ -20,7 +20,7 @@ URL访问的扩展库—— ``urllib2``
     ``data`` 不为 ``None``，则 HTTP 请求为 ``POST`` 方式。
     ``data`` 必须符合 ``application/x-www-form-urlencoded`` 格式规范。
     可以调用函数 ``urllib.urlencode()`` 做数据格式转换；
-    该函数的输入参数为字典或者二元组，返回的是 ``application/x-www-form-urlencoded`` 格式的字符串。
+    该函数的输入参数为字典或者二元组序列，返回的是 ``application/x-www-form-urlencoded`` 格式的字符串。
     urllib2 模块支持 HTTP/1.1 版本的请求，请求头中带有 **Connection:close** 字段。
 
   * ``timeout``
