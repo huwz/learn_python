@@ -1,135 +1,82 @@
 subprocess模块
 ==============
 
-对于脚本 ``D:\hello.py``:
+``subprocess.Popen``
+--------------------
 
-.. code-block:: Python
+.. note:: 类
 
-   #-*- coding -*-
+构造函数常用参数：
 
-   ''' Python 2.7.x '''
-   print 'hello,world'
-
-使用 subprocess 模块执行该脚本：
-
-.. code-block:: Python
-
- subprocess.call(r'cmd /C "D:\1.py"') #表示另外打开一个命令行窗口执行脚本，脚本执行状态码通过该函数返回
-
-.. code-block:: Python
-
- subprocess.call(r"D:\1.py", shell=True) #如果 1.py处在当前目录，则可以省略 shell 参数
-
-对于具有命令行特性的指令，shell 参数必须设为True(其余的情况下可以省略不写( shell = False ))
-
-* 命令行内部命令（比如 Windows 命令行指令 type）
-* 需要搜索路径的程序，例如上面的例子
-
-``subprocess.Popen()``
-----------------------
-
-这个函数的参数特别多，除第一个参数 ``args`` 之外，其余的都是关键字参数 [1]_。
-简单起见，只拣常用的参数介绍：
-
-* args 字符串或者参数序列。
+* ``args`` 字符串或者参数序列。
+* ``shell=False`` 是否打开命令窗口执行命令行
+* ``stdin=None`` 可以取 ``PIPE``，文件句柄，文件描述符和 ``None``
+* ``stdout=None`` 可以取 ``PIPE``，文件句柄，文件描述符和 ``None``
+* ``stderr=None`` 可以取 ``PIPE``，文件句柄，文件描述符， ``STDOUT`` 和 ``None``
   
-  字符串或者参数序列的第一个元素指明要执行的程序路径；
-  也可以使用可执行参数显示地设置。
-  例如：
+.. important:: 流对象为 ``None`` 时，子进程将继承父进程的标准流。
 
-  .. code-block:: Python
-    :linenos:
+.. code-block:: python
+ :linenos:
 
-    subprocess.Popen("Python.exe 1.py") #显示
-    subprocess.Popen("1.py") #隐式
-* shell
+ #D:\hello_world.py
+ print hello,world
+
+ #D:\test_subprocess.py
+ from subprocess import *
+
+ # ``shell = True`` cannot be skipped, as it uses shell to run the command line
+ open_obj = Popen('hello_world.py', shell = True, stdout = PIPE) 
+ # If you want to ignore ``shell`` parameter, you can use executable parameter as below:
+ # open_obj = Popen('python hello_world.py', stdout = PIPE)
+
+ out_obj = open_obj.communicate()
+ print open_obj[0]
+
+``Popen`` 实例
+--------------
+
+* ``poll()``  子进程是否结束，返回 ``returncode`` 属性值
+* ``wait()``  等待子进程结束，返回 ``returncode`` 属性值
   
-  +---------+------------+----------------------------------------------------------+---------------------------------+
-  | os      | shell      | args                                                     | 说明                            |
-  +=========+============+==========================================================+=================================+
-  | Unix    | False      | 序列/字符串(程序不能有参数)                              | os.execvp() 执行子程序          |
-  +---------+------------+----------------------------------------------------------+---------------------------------+
-  | Unix    | True       | * 字符串，和在命令窗口中执行的命令完全一致               | 命令行通过外部参数构建，        |
-  |         |            | * 序列，第一个元素是命令字符串，其余元素作为命令行的参数 | 则不推荐使用 shell=True [2]_    |
-  +---------+------------+----------------------------------------------------------+---------------------------------+
-  | Windows | False/True | * 字符串，和在命令窗口中执行的命令完全一致               | 调用 CreateProcess() 执行子程序 |
-  |         |            | * 序列，按照一定的规则转化为命令行字符串                 |                                 |
-  +---------+------------+----------------------------------------------------------+---------------------------------+
-		
-* stdin, stdout, stderr
+  .. warning:: 构造 ``Popen`` 对象时，不要使用 ``PIPE`` 参数，会死锁。
   
-  指定程序标准输入流，输出流和错误流文件句柄。
-  可以取 PIPE, 现有文件描述符（正整数），现有文件对象以及None。
-  PIPE 表示给子程序创建一个新的管道；None 表示不进行流重定向，完全继承于父进程。
-  另外，*stderr* 可以设为 STDOUT，表示程序捕捉的错误文本信息会进入标准输出流。
+* ``communicate()`` 阻塞式执行命令行，返回元组 ``(stdoudata, stderrdata)``。
+  
+  .. note:: 要返回元组 ``(stdoudata, stderrdata)``，实例化时，必须设置 ``stdout=PIPE``；
+   要想将数据传递给子进程的输入流，必须设置 ``stdin=PIPE``。
 
-* return 一个 ``Popen`` 对象
+* ``send_signal()`` 发信号给子进程(``SIGTERM``)
+* ``terminate()`` 终止子进程
+* ``kill()`` 杀死子进程
+  
+.. note:: 
+   Windows 中 ``kill()/terminate()`` 一样，都是调用 Windows API：``TerminateProcess``；
+   Unix 中 ``terminate()`` 发送消息 ``SIGTERM``， ``kill()`` 发送消息 ``SIGKILL``
 
-``subprocess.PIPE``
--------------------
+* ``pid`` 表示子进程的 ID；如果使用 ``shell=True``，则表示命令窗进程的 ID
+* ``returncode`` ``None`` 表示子进程未结束；Unix 中，``-N`` 表示等待信号 ``N`` 结束子进程。
+* ``stdout`` 如果实例化时，设置 ``stdout=PIPE``，则 ``stdout`` 为子进程的输出流；否则为 ``None``
+* ``stderr`` 如果实例化时，设置 ``stderr=PIPE``，则 ``stderr`` 为子进程的错误流；否则为 ``None``
+* ``stdin`` 如果实例化时，设置 ``stdin=PIPE``，则 ``stdin`` 为子进程的输入流；否则为 ``None``
 
-可以作为参数 stdin/stdout/stderr 的值传递给 ``Popen()``。
-函数返回一个管道对象，用于连接相应的标准流。
+.. code-block:: python
+ :linenos:
 
-``subprocess.STDOUT``
----------------------
+ open_obj = Popen('python hello_world.py', stdout=PIPE)
+ print open_obj.stdout.read()
 
-可以作为参数 stderr 的值传递给 ``Popen()``。
-函数返回一个管道对象，用于连接标准输出流和标准出错流。
+``subprocess`` 的便捷接口
+-------------------------
 
-``Popen`` 类
-------------
+* ``call()`` 阻塞式执行命令行，返回 ``returncode`` 属性值
+  
+  .. warning:: 不能设置参数 stdout=PIPE/stderr=PIPE，会死锁
 
-+---------------------------+-----------------------------------------------------------------+
-| class members             | function                                                        |
-+===========================+=================================================================+
-| Popen.poll()              | 检测子进程是否结束，设置并返回 **returncode** 属性              |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.wait()              | 等待子进程结束，设置并返回 **returncode** 属性                  |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.communicate         | * 发送数据到 stdin。                                            |
-| (input=None)              | * 从 stdout 和 stderr 中读取数据，遇到文件结束符为止。          |
-|                           | * 等待进程结束。                                                |
-|                           | * 参数是字符串，传给子进程                                      |
-|                           | * 返回元组(stdoutdata, stderrdata)                              |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.check_output        | 执行带参数的命令行，结果以字节数组返回                          |
-| (\*popenargs, \*\*kwargs) |                                                                 |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.send_signal         | * SIGTERM(Windows 中是 terminate() 的别名)                      |
-| (signal)                  | * CTRL_C_EVENT   CTRL + C 按键消息                              |
-|                           | * CTRL_BREAK_EVENT .etc                                         |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.terminate()         | 结束子进程，在 Posix 操作系统中，发送 SIGTERM 消息给子进程      |
-|                           | 在 Windows 操作系统中，使用系统 API TerminateProcess() 结束进程 |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.kill()              | * Windows 系统中，是 terminate() 的别名                         |
-|                           | * Posix 系统中，发送 SIGKILL 给子进程                           |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.stdin               | stdin=PIPE，则该属性是一个文件对象，为子进程提供输入；          |
-|                           | stdin=None，则为 None                                           |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.stdout              | stdin=PIPE，则该属性是一个文件对象，获取子进程的输出；          |
-|                           | stdin=None，则为 None                                           |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.stderr              | stdin=PIPE，则该属性是一个文件对象，获取子进程的错误信息；      |
-|                           | stdin=None，则为 None                                           |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.pid                 | shell=False，子进程的进程 ID                                    |
-|                           | shell=True，命令窗的进程 ID                                     |
-+---------------------------+-----------------------------------------------------------------+
-| Popen.returncode          | 子进程的返回码，通过 ``poll()`` 和 ``wait()`` 设置；            |
-|                           | 间接通过 ``communicate()`` 设置；                               |
-|                           | 为 None，表示子进程并未结束                                     |
-+---------------------------+-----------------------------------------------------------------+
+* ``check_call()`` 阻塞式执行命令行，返回0，表示子进程正常退出；
+  否则抛出异常 ``CalledProcessError``
+* ``check_output()`` 阻塞式执行命令行，正常情况下返回命令行输出（字节数组）；
+  否则抛出异常 ``CalledProcessError``
 
-
-.. warning:: 使用 stdout=PIPE / stderr=PIPE 时，Popen.wait() 会产生死锁；
- 子进程产生的输出信息太多，会因等待OS管道缓冲区接收数据而阻塞。
- communicate() 可以避免这个问题。
-
-
-
-
-.. [1] 诸如：a = 0 这种形式的参数
-.. [2] 涉及到到命令行注入问题（即可以外部编辑命令行），命令行注入允许用户越权使用任意指令。
+  .. note:: 不能使用 ``stdout=PIPE``，可以使用 ``stderr=STDOUT`` 来捕获并输出错误信息。
+  
