@@ -21,7 +21,7 @@ BaseHTTPServer
    def run(server_class=BaseHTTPServer.HTTPServer, handler_class=BaseHTTPServer.BaseHTTPRequestHandler):
        server_address = ('', 3000)
        httpd = server_class(server_address, handler_class)
-       httpd.server_forever()
+       httpd.serve_forever()
 
   构造函数参数说明：
 
@@ -45,7 +45,7 @@ BaseHTTPServer
 -------------------------------------
 
 * ``client_address`` 是一个二元组 ``(host, port)``，表示客户端主机地址
-* ``server`` 服务器实例
+* ``server`` ``BaseHTTPServer`` 实例
 * ``command`` 请求类型，如 ``GET``
 * ``path`` 请求路径
 * ``request_version`` 请求的协议版本，例如：``HTTP/1.0``
@@ -74,7 +74,7 @@ BaseHTTPServer
     
   指定一个格式化字符串，用于构建错误响应消息，发送给客户端。
 
-  其格式为：``{code:(message, explain)}``。
+  可能为 ``{code:(message, explain)}``，其中：
 
   ``code`` 是整数，表示 HTTP 错误码；``message`` 为错误简略信息，``explain`` 为错误详细解释。
 
@@ -103,7 +103,7 @@ BaseHTTPServer
     
   ``{code:(shormessage, longmessage)}``
 
-  它是一个字典，表示错误码到 ``(短信息, 长信息)`` 的映射。
+  它是一个字典，表示错误码到 ``(短信息, 长信息)`` 的映射（符合 ``error_message_format`` 指定的格式）。
 
 ``BaseHTTPRequestHandler`` 的方法
 ---------------------------------
@@ -128,9 +128,8 @@ BaseHTTPServer
 
 * ``send_response(code[,message])``
   
-  发送响应头和响应日志。
-  发送完 HTTP 响应行之后，发送服务器头和数据头。
-  可以分别通过方法 ``version_string()`` 和 ``data_time_string()`` 获取。
+  发送一个响应头（类似于 ``HTTP/1.1 200 OK``），记录接收的请求；
+  之后发送服务器头（``version_string()``）和数据头（``data_time_string()``）。
 
 * ``send_header(keyword, value)``
   
@@ -142,7 +141,7 @@ BaseHTTPServer
 
 * ``log_request([code][,size])``
   
-  成功接收请求时，打印日志。
+  成功接收请求时，打印日志到标准输出流。
 
   ``code`` 为 HTTP 响应状态码；
   ``size`` 表示响应消息体的长度。
