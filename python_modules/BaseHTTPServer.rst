@@ -48,6 +48,9 @@ BaseHTTPServer
 * ``server`` ``BaseHTTPServer`` 实例
 * ``command`` 请求类型，如 ``GET``
 * ``path`` 请求路径
+  
+  例如：客户端请求 URL 为： ``http://127.0.0.1:2000/search?name=huwz&pwd=123456``，则 path 为 ``/search?name=huwz&pwd=123456``。
+
 * ``request_version`` 请求的协议版本，例如：``HTTP/1.0``
 * ``headers``
     
@@ -74,7 +77,7 @@ BaseHTTPServer
     
   指定一个格式化字符串，用于构建错误响应消息，发送给客户端。
 
-  可能为 ``{code:(message, explain)}``，其中：
+  其中：
 
   ``code`` 是整数，表示 HTTP 错误码；``message`` 为错误简略信息，``explain`` 为错误详细解释。
 
@@ -128,7 +131,7 @@ BaseHTTPServer
 
 * ``send_response(code[,message])``
   
-  发送一个响应头（类似于 ``HTTP/1.1 200 OK``），记录接收的请求；
+  发送一个响应头（类似于 ``HTTP/1.1 200 OK``），打印与接收请求相关的日志；
   之后发送服务器头（``version_string()``）和数据头（``data_time_string()``）。
 
 * ``send_header(keyword, value)``
@@ -162,15 +165,15 @@ BaseHTTPServer
   返回服务器软件版本字符串；
   由 ``server_version`` 和 ``sys_version`` 组合而成。
 
-* ``data_time_string([timestamp])``
+* ``date_time_string([timestamp])``
   
   返回指定时间戳(``time.time()``)的日期和时间；用于消息头。
 
   如果参数 ``timestamp`` 省略，则使用当前日期和时间。
 
-  其格式类似于：``Sun, 08, Feb 2015 23:09:30 GMT``
+  其格式类似于：``Sun, 08 Feb 2015 23:09:30 GMT``
 
-* ``log_data_time_string()``
+* ``log_date_time_string()``
   
   返回当前日期和时间，用于日志打印。
 
