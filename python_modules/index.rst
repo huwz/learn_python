@@ -13,4 +13,5 @@ Python模块
 
    subprocess
    urllib2
+   BaseHTTPServer
    unit_test
