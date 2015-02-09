@@ -79,4 +79,3 @@ subprocess模块
   否则抛出异常 ``CalledProcessError``
 
   .. note:: 不能使用 ``stdout=PIPE``，可以使用 ``stderr=STDOUT`` 来捕获并输出错误信息。
-  

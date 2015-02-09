@@ -15,3 +15,5 @@ Python模块
    urllib2
    BaseHTTPServer
    unit_test
+   os.spawn_
+   multi_process
